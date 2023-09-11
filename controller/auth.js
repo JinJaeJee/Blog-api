@@ -1,4 +1,4 @@
-import {db} from "../mysqldb.js";
+import {db} from "../db.js"
 import bcrypt from "bcryptjs";
 
 export const register = (req,res)=>{
@@ -12,16 +12,12 @@ export const register = (req,res)=>{
 
         //Hash the password and create a user
 
-        const salt = bcrypt.genSaltSyn(10);
+        const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
 
 
         const q = "INSERT INTO users(`username`,`email`,`password`) VALUES (?)";
-        const values = [
-            req.body.username,
-            req.body.email,
-            hash
-        ];
+        const values = [req.body.username, req.body.email, hash];
 
         db.query(q,[values], (err,data)=>{
             if (err) return res.status(500).json(err);
